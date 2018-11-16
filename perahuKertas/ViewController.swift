@@ -16,8 +16,10 @@ class ViewController: UIViewController {
     @IBOutlet weak var viewContainer: UIView!
     var topWaterTimer: Timer?
     var bottomWaterTimer: Timer?
+    var boatSwingTimer: Timer?
     var topWaterMoveRight: Bool = true
     var bottomWaterMoveRight: Bool = false
+    var boatSwingRight: Bool = true
     
     let boat: UIImageView = {
         let boat: UIImage = UIImage(named: "Boat1")!
@@ -105,16 +107,7 @@ class ViewController: UIViewController {
         
         levelTimer = Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(levelTimerCallback), userInfo: nil, repeats: true)
         
-        imageDesireSize(view: topWater, desiredWidth: 500)
-        imageDesireSize(view: bottomWater, desiredWidth: 500)
-        
         self.initiationPosition()
-        viewContainer.addSubview(boat)
-        viewContainer.addSubview(topWater)
-        viewContainer.addSubview(bottomWater)
-        viewContainer.addSubview(lengthBar)
-        viewContainer.addSubview(distanceIndicator)
-        
         self.startWaterMoveTimer()
     }
     
@@ -150,48 +143,20 @@ class ViewController: UIViewController {
     }
     
     func initiationPosition() {
+        imageDesireSize(view: topWater, desiredWidth: 500)
+        imageDesireSize(view: bottomWater, desiredWidth: 500)
+        
         self.boat.frame.origin = CGPoint(x: 102, y: 424)
         self.topWater.frame.origin = CGPoint(x: (UIScreen.main.bounds.width - self.topWater.frame.width) / 2, y: 734)
         self.bottomWater.frame.origin = CGPoint(x: (UIScreen.main.bounds.width - self.bottomWater.frame.width) / 2, y: 770)
         self.lengthBar.frame.origin = CGPoint(x: 19, y: 51)
         self.distanceIndicator.frame.origin = CGPoint(x: 19, y: 724)
-    }
-    
-    func startWaterMoveTimer() {
-        self.topWaterTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true, block: { (_) in
-            self.topWaterMove()
-        })
-        self.bottomWaterTimer = Timer.scheduledTimer(withTimeInterval: 1.8, repeats: true, block: { (_) in
-            self.bottomWaterMove()
-        })
-    }
-    
-    func topWaterMove() {
-        if topWaterMoveRight {
-            UIView.animate(withDuration: 2) {
-                self.topWater.transform = CGAffineTransform(translationX: 50, y: 0)
-                self.topWaterMoveRight = !self.topWaterMoveRight
-            }
-        } else {
-            UIView.animate(withDuration: 2) {
-                self.topWater.transform = CGAffineTransform(translationX: -50, y: 0)
-                self.topWaterMoveRight = !self.topWaterMoveRight
-            }
-        }
-    }
-    
-    func bottomWaterMove() {
-        if bottomWaterMoveRight {
-            UIView.animate(withDuration: 1.8) {
-                self.bottomWater.transform = CGAffineTransform(translationX: 75, y: 0)
-                self.bottomWaterMoveRight = !self.bottomWaterMoveRight
-            }
-        } else {
-            UIView.animate(withDuration: 1.8) {
-                self.bottomWater.transform = CGAffineTransform(translationX: -75, y: 0)
-                self.bottomWaterMoveRight = !self.bottomWaterMoveRight
-            }
-        }
+        
+        viewContainer.addSubview(boat)
+        viewContainer.addSubview(topWater)
+        viewContainer.addSubview(bottomWater)
+        viewContainer.addSubview(lengthBar)
+        viewContainer.addSubview(distanceIndicator)
     }
     
 }
