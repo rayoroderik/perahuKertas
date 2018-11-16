@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9BF37D67219E7BEC006A8CF8 /* UIHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF37D66219E7BEC006A8CF8 /* UIHelper.swift */; };
 		A37B2438219E6E1700A53797 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37B2437219E6E1700A53797 /* AppDelegate.swift */; };
 		A37B243A219E6E1700A53797 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37B2439219E6E1700A53797 /* ViewController.swift */; };
 		A37B243D219E6E1700A53797 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A37B243B219E6E1700A53797 /* Main.storyboard */; };
@@ -15,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9BF37D66219E7BEC006A8CF8 /* UIHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIHelper.swift; sourceTree = "<group>"; };
 		A37B2434219E6E1700A53797 /* perahuKertas.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = perahuKertas.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A37B2437219E6E1700A53797 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A37B2439219E6E1700A53797 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -60,6 +62,7 @@
 				A37B243E219E6E1800A53797 /* Assets.xcassets */,
 				A37B2440219E6E1800A53797 /* LaunchScreen.storyboard */,
 				A37B2443219E6E1800A53797 /* Info.plist */,
+				9BF37D66219E7BEC006A8CF8 /* UIHelper.swift */,
 			);
 			path = perahuKertas;
 			sourceTree = "<group>";
@@ -137,6 +140,7 @@
 			files = (
 				A37B243A219E6E1700A53797 /* ViewController.swift in Sources */,
 				A37B2438219E6E1700A53797 /* AppDelegate.swift in Sources */,
+				9BF37D67219E7BEC006A8CF8 /* UIHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,7 +287,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 77F35BPUBS;
+				DEVELOPMENT_TEAM = 7QY3HCSBXC;
 				INFOPLIST_FILE = perahuKertas/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -301,7 +305,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 77F35BPUBS;
+				DEVELOPMENT_TEAM = 7QY3HCSBXC;
 				INFOPLIST_FILE = perahuKertas/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
