@@ -15,9 +15,9 @@ class ViewController: UIViewController {
     
     var recorder: AVAudioRecorder!
     var levelTimer = Timer()
-    var x = 0
+    var distance = 0
     
-    let LEVEL_THRESHOLD: Float = -10.0
+    let LEVEL_THRESHOLD: Float = 0.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,7 +36,7 @@ class ViewController: UIViewController {
         
         let audioSession = AVAudioSession.sharedInstance()
         do {
-            try AVAudioSession.sharedInstance().setCategory(.playAndRecord, mode: .default, options: [])
+            try audioSession.setCategory(.playAndRecord, mode: .measurement, options: .defaultToSpeaker)
             try audioSession.setActive(true)
             try recorder = AVAudioRecorder(url:url, settings: recordSettings)
             
@@ -60,9 +60,24 @@ class ViewController: UIViewController {
         
         // do whatever you want with isLoud
         if isLoud {
+            distance = distance + Int(level)
+            print(distance)
             
-            print(level)
+            let timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(fireTimer), userInfo: nil, repeats: true)
+            
+            
         }
+        
+        while distance >= 5000{
+            // finish line
+            
+        }
+    }
+    
+    @objc func fireTimer(){
+        print("timer start")
+        var elapsedTime = 0
+        elapsedTime += 1
     }
     
     override func didReceiveMemoryWarning() {
