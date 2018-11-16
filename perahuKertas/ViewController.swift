@@ -15,6 +15,7 @@ class ViewController: UIViewController {
     
     var recorder: AVAudioRecorder!
     var levelTimer = Timer()
+    var x = 0
     
     let LEVEL_THRESHOLD: Float = -10.0
     
@@ -59,7 +60,8 @@ class ViewController: UIViewController {
         
         // do whatever you want with isLoud
         if isLoud {
-            print("omegalul")
+            
+            print(level)
         }
     }
     
