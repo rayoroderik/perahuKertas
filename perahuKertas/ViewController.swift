@@ -69,6 +69,8 @@ class ViewController: UIViewController {
     var recorder: AVAudioRecorder!
     var levelTimer = Timer()
     var distance = 0
+    var elapsedTime = 0
+    var gameEnded = false
     
     let LEVEL_THRESHOLD: Float = 0.0
     
@@ -122,25 +124,23 @@ class ViewController: UIViewController {
         let level = recorder.averagePower(forChannel: 0)
         let isLoud = level > LEVEL_THRESHOLD
         
+        var timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(fireTimer), userInfo: nil, repeats: true)
+        
         // do whatever you want with isLoud
-        if isLoud {
+        if isLoud && distance < 1000{
             distance = distance + Int(level)
             print(distance)
-            
-            let timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(fireTimer), userInfo: nil, repeats: true)
-            
-            
         }
         
-        while distance >= 5000{
+        if distance >= 1000 && gameEnded == false{
             // finish line
-            
+            print("time: \(elapsedTime)")
+            timer.invalidate()
+            gameEnded = true
         }
     }
     
     @objc func fireTimer(){
-        print("timer start")
-        var elapsedTime = 0
         elapsedTime += 1
     }
     
