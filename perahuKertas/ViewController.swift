@@ -123,6 +123,7 @@ class ViewController: UIViewController {
         if isLoud && distance < 1000{
             distance = distance + Int(level)
             print(distance)
+            updateBoatLayerOpen(level)
         }
         
         if distance >= 1000 && gameEnded == false{
