@@ -20,6 +20,8 @@ class ViewController: UIViewController {
     var topWaterMoveRight: Bool = true
     var bottomWaterMoveRight: Bool = false
     var boatSwingRight: Bool = true
+    var level: Float = 0.0
+    var movingDistance : Float = 0.0
     
     let boat: UIImageView = {
         let boat: UIImage = UIImage(named: "Boat1")!
@@ -68,10 +70,24 @@ class ViewController: UIViewController {
         return distanceIndicatorView
     }()
     
+    let timerLabel: UILabel = {
+        let timerLabel: UILabel = UILabel()
+        timerLabel.frame = CGRect(x: 10, y: 50, width: 230, height: 60)
+        timerLabel.text = "Blow the ship to start sailing"
+        timerLabel.textColor = UIColor.black
+        timerLabel.font = UIFont.init(name: "Helvetica", size: 24)
+        timerLabel.textAlignment = .center
+        timerLabel.numberOfLines = 0
+        timerLabel.lineBreakMode = .byWordWrapping
+        return timerLabel
+    }()
+    
     var recorder: AVAudioRecorder!
     var levelTimer = Timer()
+    var scoreTimer = Timer()
     var distance = 0
-    var elapsedTime = 0
+    let finish = 3440
+    var elapsedTime = 0.01
     var gameEnded = false
     
     let LEVEL_THRESHOLD: Float = 0.0
@@ -106,36 +122,58 @@ class ViewController: UIViewController {
         recorder.record()
         
         levelTimer = Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(levelTimerCallback), userInfo: nil, repeats: true)
-        
+
         self.initiationPosition()
         self.startWaterMoveTimer()
+        
     }
     
     @objc func levelTimerCallback() {
         recorder.updateMeters()
         
-        let level = recorder.averagePower(forChannel: 0)
+        level = recorder.averagePower(forChannel: 0)
         let isLoud = level > LEVEL_THRESHOLD
         
-        var timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(fireTimer), userInfo: nil, repeats: true)
-        
-        // do whatever you want with isLoud
-        if isLoud && distance < 1000{
-            distance = distance + Int(level)
-            print(distance)
-            updateBoatLayerOpen(level)
+        if isLoud && distance == 0 {
+            startTimer()
+            moveShip()
+        } else if isLoud && distance < finish{
+            moveShip()
         }
         
-        if distance >= 1000 && gameEnded == false{
-            // finish line
+        if distance >= finish && gameEnded == false{
             print("time: \(elapsedTime)")
-            timer.invalidate()
+            
             gameEnded = true
+            stopTimer()
         }
     }
     
+    func moveShip(){
+        distance = distance + Int(level)
+        print(distance)
+        
+        updateBoatLayerOpen(level)
+        self.movingDistance = Float(self.distance) / 5
+        UIView.animate(withDuration: 0.01) {
+            let shipPosition = CGPoint(x: 19, y: 724 - Int(self.movingDistance))
+            self.distanceIndicator.frame.origin = shipPosition
+        }
+    }
+    
+    func startTimer(){
+        scoreTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(fireTimer), userInfo: nil, repeats: true)
+    }
+    
+    func stopTimer(){
+        scoreTimer.invalidate()
+    }
+   
     @objc func fireTimer(){
-        elapsedTime += 1
+        elapsedTime += 0.01
+        let currentTime = String(format: "%.2f", elapsedTime)
+        timerLabel.font = UIFont.init(name: "Helvetica", size: 60)
+        timerLabel.text = "\(currentTime) s"
     }
     
     override func didReceiveMemoryWarning() {
@@ -152,12 +190,15 @@ class ViewController: UIViewController {
         self.bottomWater.frame.origin = CGPoint(x: (UIScreen.main.bounds.width - self.bottomWater.frame.width) / 2, y: 770)
         self.lengthBar.frame.origin = CGPoint(x: 19, y: 51)
         self.distanceIndicator.frame.origin = CGPoint(x: 19, y: 724)
+        self.timerLabel.frame.origin = CGPoint(x: (UIScreen.main.bounds.width - self.timerLabel.frame.width)/2, y: 250)
+//        self.timerLabel.frame.origin = CGPoint(x: 50, y: 50)
         
         viewContainer.addSubview(boat)
         viewContainer.addSubview(topWater)
         viewContainer.addSubview(bottomWater)
         viewContainer.addSubview(lengthBar)
         viewContainer.addSubview(distanceIndicator)
+        viewContainer.addSubview(timerLabel)
     }
     
 }
