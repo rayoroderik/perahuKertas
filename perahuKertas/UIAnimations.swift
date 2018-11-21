@@ -11,18 +11,28 @@ import UIKit
 extension ViewController {
     
     func startWaterMoveTimer() {
-        self.topWaterMove()
-        self.topWaterTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true, block: { (_) in
+        topWaterMove()
+        topWaterTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true, block: { (_) in
             self.topWaterMove()
         })
-        self.bottomWaterMove()
-        self.bottomWaterTimer = Timer.scheduledTimer(withTimeInterval: 1.8, repeats: true, block: { (_) in
+        bottomWaterMove()
+        bottomWaterTimer = Timer.scheduledTimer(withTimeInterval: 1.8, repeats: true, block: { (_) in
             self.bottomWaterMove()
         })
-        self.boatSwing()
-        self.boatSwingTimer = Timer.scheduledTimer(withTimeInterval: 6, repeats: true, block: { (_) in
+    }
+    
+    func startBoatTimer() {
+        boatSwing()
+        boatSwingTimer = Timer.scheduledTimer(withTimeInterval: 6, repeats: true, block: { (_) in
             self.boatSwing()
         })
+    }
+    
+    func stopBoatTimer() {
+        if boatSwingTimer != nil || boatSwingTimer != Timer() {
+            self.boatSwingTimer?.invalidate()
+            self.boatSwingTimer = nil
+        }
     }
     
     func topWaterMove() {
@@ -59,7 +69,7 @@ extension ViewController {
                 self.boat.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi/40))
             }) { (_) in
                 UIView.animate(withDuration: 3, animations: {
-                    self.boat.transform = .identity
+                    self.boat.transform = CGAffineTransform(rotationAngle: -CGFloat(Double.pi/40))
                     self.boatSwingRight = !self.boatSwingRight
                 })
             }
@@ -68,7 +78,7 @@ extension ViewController {
                 self.boat.transform = CGAffineTransform(rotationAngle: -CGFloat(Double.pi/40))
             }) { (_) in
                 UIView.animate(withDuration: 3, animations: {
-                    self.boat.transform = .identity
+                    self.boat.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi/40))
                     self.boatSwingRight = !self.boatSwingRight
                 })
             }
@@ -77,13 +87,29 @@ extension ViewController {
     
     func updateBoatLayerOpen(_ level: Float) {
         if level < 2 {
-            self.boat.image = UIImage(named: "Boat1")
+            boat.image = UIImage(named: "Boat1")
         } else if level < 4 {
-            self.boat.image = UIImage(named: "Boat2")
+            boat.image = UIImage(named: "Boat2")
         } else if level < 6 {
-            self.boat.image = UIImage(named: "Boat3")
+            boat.image = UIImage(named: "Boat3")
         } else {
-            self.boat.image = UIImage(named: "Boat4")
+            boat.image = UIImage(named: "Boat4")
         }
+    }
+    
+    func animateBoatGoAway() {
+        UIView.animate(withDuration: 4) {
+            self.boat.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+        }
+        UIView.animate(withDuration: 8) {
+            self.boat.frame.origin.y += 450
+            self.boat.alpha = 0
+        }
+    }
+    
+    func boatViewInit() {
+        boat.transform = .identity
+        boat.frame.origin = CGPoint(x: 102, y: 424)
+        boat.alpha = 1
     }
 }

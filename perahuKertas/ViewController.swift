@@ -83,8 +83,8 @@ class ViewController: UIViewController {
     }()
     
     var recorder: AVAudioRecorder!
-    var levelTimer = Timer()
-    var scoreTimer = Timer()
+    var levelTimer: Timer?
+    var scoreTimer: Timer?
     var distance = 0
     let finish = 3440
     var elapsedTime = 0.01
@@ -123,9 +123,10 @@ class ViewController: UIViewController {
         
         levelTimer = Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(levelTimerCallback), userInfo: nil, repeats: true)
 
-        self.initiationPosition()
-        self.startWaterMoveTimer()
-        
+        initiationPosition()
+        addSubviewsInit()
+        startWaterMoveTimer()
+        startBoatTimer()
     }
     
     @objc func levelTimerCallback() {
@@ -146,6 +147,9 @@ class ViewController: UIViewController {
             
             gameEnded = true
             stopTimer()
+            stopBoatTimer()
+            
+            animateBoatGoAway()
         }
     }
     
@@ -166,7 +170,10 @@ class ViewController: UIViewController {
     }
     
     func stopTimer(){
-        scoreTimer.invalidate()
+        if scoreTimer != nil || scoreTimer != Timer() {
+            scoreTimer?.invalidate()
+            scoreTimer = nil
+        }
     }
    
     @objc func fireTimer(){
@@ -181,24 +188,32 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func initiationPosition() {
-        imageDesireSize(view: topWater, desiredWidth: 500)
-        imageDesireSize(view: bottomWater, desiredWidth: 500)
-        
-        self.boat.frame.origin = CGPoint(x: 102, y: 424)
-        self.topWater.frame.origin = CGPoint(x: (UIScreen.main.bounds.width - self.topWater.frame.width) / 2, y: 734)
-        self.bottomWater.frame.origin = CGPoint(x: (UIScreen.main.bounds.width - self.bottomWater.frame.width) / 2, y: 770)
-        self.lengthBar.frame.origin = CGPoint(x: 19, y: 51)
-        self.distanceIndicator.frame.origin = CGPoint(x: 19, y: 724)
-        self.timerLabel.frame.origin = CGPoint(x: (UIScreen.main.bounds.width - self.timerLabel.frame.width)/2, y: 250)
-//        self.timerLabel.frame.origin = CGPoint(x: 50, y: 50)
-        
+    func addSubviewsInit() {
         viewContainer.addSubview(boat)
         viewContainer.addSubview(topWater)
         viewContainer.addSubview(bottomWater)
         viewContainer.addSubview(lengthBar)
         viewContainer.addSubview(distanceIndicator)
         viewContainer.addSubview(timerLabel)
+    }
+    
+    func initiationPosition() {
+        // Water
+        imageDesireSize(view: topWater, desiredWidth: 500)
+        imageDesireSize(view: bottomWater, desiredWidth: 500)
+        topWater.frame.origin = CGPoint(x: (UIScreen.main.bounds.width - topWater.frame.width) / 2, y: 734)
+        bottomWater.frame.origin = CGPoint(x: (UIScreen.main.bounds.width - bottomWater.frame.width) / 2, y: 770)
+        
+        // Boat
+        boatViewInit()
+        
+        // Indicators
+        lengthBar.frame.origin = CGPoint(x: 19, y: 51)
+        distanceIndicator.frame.origin = CGPoint(x: 19, y: 724)
+        
+        timerLabel.frame.origin = CGPoint(x: (UIScreen.main.bounds.width - timerLabel.frame.width)/2, y: 250)
+//        self.timerLabel.frame.origin = CGPoint(x: 50, y: 50)
+        
     }
     
 }
