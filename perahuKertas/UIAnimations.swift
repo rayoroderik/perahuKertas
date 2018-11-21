@@ -130,6 +130,8 @@ extension ViewController {
     }
     
     func animateBoatGoAway() {
+        topWater.image = UIImage(named: "TopWaterSteady")
+        bottomWater.image = UIImage(named: "BottomWaterSteady")
         UIView.animate(withDuration: 4) {
             self.boat.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
             self.boat.alpha = 0
@@ -143,5 +145,55 @@ extension ViewController {
         boat.transform = .identity
         boat.frame.origin = CGPoint(x: 102, y: 424)
         boat.alpha = 1
+        distanceIndicator.frame.origin = CGPoint(x: 19, y: 724)
+    }
+    
+    func boatAnimateReset() {
+        UIView.animate(withDuration: 1) {
+            self.boat.frame.origin = CGPoint(x: 102, y: 424)
+            self.boat.alpha = 1
+            self.distanceIndicator.frame.origin = CGPoint(x: 19, y: 724)
+        }
+    }
+    
+    func createResetButton() {
+        let resetButton: UILabel = {
+            let resetLabel: UILabel = UILabel()
+            resetLabel.translatesAutoresizingMaskIntoConstraints = false
+            resetLabel.text = "Restart"
+            resetLabel.font = UIFont.init(name: "Helvetica", size: 40)
+            resetLabel.sizeToFit()
+            resetLabel.textAlignment = .center
+            resetLabel.textColor = .darkText
+            resetLabel.isUserInteractionEnabled = true
+            resetLabel.alpha = 0
+            resetLabel.tag = 111
+            return resetLabel
+        }()
+        let tap = UITapGestureRecognizer(target: self, action: #selector(resetState))
+        resetButton.addGestureRecognizer(tap)
+        view.addSubview(resetButton)
+        resetButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        resetButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -150).isActive = true
+        UIView.animate(withDuration: 1) {
+            resetButton.alpha = 1
+        }
+    }
+    
+    @objc func resetState() {
+        for view in self.view.subviews {
+            if view.tag == 111 {
+                view.removeFromSuperview()
+            }
+        }
+        timerLabel.text = "Blow the ship to start sailing"
+        timerLabel.font = UIFont.init(name: "Helvetica", size: 24)
+        boatAnimateReset()
+        elapsedTime = 0
+        distance = 0
+        gameEnded = false
+        isWritingScore = false
+        levelTimerCallback()
+        startBoatTimer()
     }
 }

@@ -26,6 +26,7 @@ class ViewController: UIViewController {
     
     let container = CKContainer.default()
     var score = CKRecord(recordType: "Highscores")
+    var isWritingScore = false
     
     let boat: UIImageView = {
         let boat: UIImage = UIImage(named: "Boat1")!
@@ -36,7 +37,6 @@ class ViewController: UIViewController {
         return boatView
     }()
     
-    
     let topWater: UIImageView = {
         let topWater: UIImage = UIImage(named: "TopWaterSteady")!
         let size: CGSize = CGSize(width: topWater.size.width, height: topWater.size.height)
@@ -45,7 +45,6 @@ class ViewController: UIViewController {
         topWaterView.contentMode = .scaleAspectFill
         return topWaterView
     }()
-    
     
     let bottomWater: UIImageView = {
         let bottomWater: UIImage = UIImage(named: "BottomWaterSteady")!
@@ -98,72 +97,74 @@ class ViewController: UIViewController {
     let finish = 3440
     var elapsedTime = 0.01
     var gameEnded = false
+    var gameIsSet = false
     
     let LEVEL_THRESHOLD: Float = 0.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let documents = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0])
-        let url = documents.appendingPathComponent("record.caf")
-        
-        let recordSettings: [String: Any] = [
-            AVFormatIDKey:              kAudioFormatAppleIMA4,
-            AVSampleRateKey:            44100.0,
-            AVNumberOfChannelsKey:      2,
-            AVEncoderBitRateKey:        12800,
-            AVLinearPCMBitDepthKey:     16,
-            AVEncoderAudioQualityKey:   AVAudioQuality.max.rawValue
-        ]
-        
-        let audioSession = AVAudioSession.sharedInstance()
-        do {
-            try audioSession.setCategory(.playAndRecord, mode: .measurement, options: .defaultToSpeaker)
-            try audioSession.setActive(true)
-            try recorder = AVAudioRecorder(url:url, settings: recordSettings)
+        if !gameIsSet {
+            let documents = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0])
+            let url = documents.appendingPathComponent("record.caf")
             
-        } catch {
-            return
+            let recordSettings: [String: Any] = [
+                AVFormatIDKey:              kAudioFormatAppleIMA4,
+                AVSampleRateKey:            44100.0,
+                AVNumberOfChannelsKey:      2,
+                AVEncoderBitRateKey:        12800,
+                AVLinearPCMBitDepthKey:     16,
+                AVEncoderAudioQualityKey:   AVAudioQuality.max.rawValue
+            ]
+            
+            let audioSession = AVAudioSession.sharedInstance()
+            do {
+                try audioSession.setCategory(.playAndRecord, mode: .measurement, options: .defaultToSpeaker)
+                try audioSession.setActive(true)
+                try recorder = AVAudioRecorder(url:url, settings: recordSettings)
+                
+            } catch {
+                return
+            }
+            
+            recorder.prepareToRecord()
+            recorder.isMeteringEnabled = true
+            recorder.record()
+            
+            levelTimer = Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(levelTimerCallback), userInfo: nil, repeats: true)
+            
+            initiationPosition()
+            addSubviewsInit()
+            startWaterMoveTimer()
+            startBoatTimer()
+            gameIsSet = true
         }
-        
-        recorder.prepareToRecord()
-        recorder.isMeteringEnabled = true
-        recorder.record()
-        
-        levelTimer = Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(levelTimerCallback), userInfo: nil, repeats: true)
-
-        initiationPosition()
-        addSubviewsInit()
-        startWaterMoveTimer()
-        startBoatTimer()
     }
     
     @objc func levelTimerCallback() {
-        recorder.updateMeters()
-        
-        level = recorder.averagePower(forChannel: 0)
-        let isLoud = level > LEVEL_THRESHOLD
-        
-        if isLoud && distance == 0 {
-            startTimer()
-            moveShip()
-        } else if isLoud && distance < finish{
-            moveShip()
-        }
-        
-        if distance >= finish && gameEnded == false{
-            print("time: \(elapsedTime)")
-            
-            gameEnded = true
-            stopTimer()
-            stopBoatTimer()
-            
-            animateBoatGoAway()
-            
-            //munculin textField untuk input nama, lalu push ke publicDatabase di CloudKit dengan score-nya. kalo nama-nya uda ada, suggest nama lain.
-            showNameTextField()
-            
-            
+        if !gameEnded {
+            if distance >= finish {
+                gameEnded = true
+            }
+            recorder.updateMeters()
+            level = recorder.averagePower(forChannel: 0)
+            let isLoud = level > LEVEL_THRESHOLD
+            if isLoud && distance == 0 {
+                startTimer()
+                moveShip()
+            } else if isLoud && distance < finish{
+                moveShip()
+            }
+        } else {
+            if !isWritingScore {
+                isWritingScore = true
+                stopTimer()
+                stopBoatTimer()
+                animateBoatGoAway()
+                //munculin textField untuk input nama, lalu push ke publicDatabase di CloudKit dengan score-nya. kalo nama-nya uda ada, suggest nama lain.
+                showNameTextField()
+                print("time: \(elapsedTime)")
+            }
         }
     }
     
@@ -174,12 +175,14 @@ class ViewController: UIViewController {
             nameTextField.placeholder = "enter name here"
         }
         
-        inputNameAlertController.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+        inputNameAlertController.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (_) in
+            self.createResetButton()
+        }))
         inputNameAlertController.addAction(UIAlertAction(title: "Submit", style: .default, handler: { (alertAction) in
-            
             if let name = self.inputNameAlertController.textFields![0].text{
                 self.insertNew(with: name)
             }
+            self.createResetButton()
         }))
         self.present(inputNameAlertController, animated: true, completion: nil)
     }
@@ -233,7 +236,7 @@ class ViewController: UIViewController {
             scoreTimer = nil
         }
     }
-   
+    
     @objc func fireTimer(){
         elapsedTime += 0.01
         let currentTime = String(format: "%.2f", elapsedTime)
@@ -272,7 +275,7 @@ class ViewController: UIViewController {
         distanceIndicator.frame.origin = CGPoint(x: 19, y: 724)
         
         timerLabel.frame.origin = CGPoint(x: (UIScreen.main.bounds.width - timerLabel.frame.width)/2, y: 250)
-//        self.timerLabel.frame.origin = CGPoint(x: 50, y: 50)
+        //        self.timerLabel.frame.origin = CGPoint(x: 50, y: 50)
         
     }
     
