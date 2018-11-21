@@ -34,7 +34,7 @@ class ViewController: UIViewController {
     
     
     let topWater: UIImageView = {
-        let topWater: UIImage = UIImage(named: "TopWater")!
+        let topWater: UIImage = UIImage(named: "TopWaterSteady")!
         let size: CGSize = CGSize(width: topWater.size.width, height: topWater.size.height)
         let topWaterView: UIImageView = UIImageView(frame: CGRect(origin: .zero, size: size))
         topWaterView.image = topWater
@@ -44,7 +44,7 @@ class ViewController: UIViewController {
     
     
     let bottomWater: UIImageView = {
-        let bottomWater: UIImage = UIImage(named: "BottomWater")!
+        let bottomWater: UIImage = UIImage(named: "BottomWaterSteady")!
         let size: CGSize = CGSize(width: bottomWater.size.width, height: bottomWater.size.height)
         let bottomWaterView: UIImageView = UIImageView(frame: CGRect(origin: .zero, size: size))
         bottomWaterView.image = bottomWater
@@ -201,6 +201,8 @@ class ViewController: UIViewController {
         // Water
         imageDesireSize(view: topWater, desiredWidth: 500)
         imageDesireSize(view: bottomWater, desiredWidth: 500)
+        topWater.image = UIImage(named: "TopWaterSteady")
+        bottomWater.image = UIImage(named: "BottomWaterSteady")
         topWater.frame.origin = CGPoint(x: (UIScreen.main.bounds.width - topWater.frame.width) / 2, y: 734)
         bottomWater.frame.origin = CGPoint(x: (UIScreen.main.bounds.width - bottomWater.frame.width) / 2, y: 770)
         
