@@ -85,25 +85,57 @@ extension ViewController {
         }
     }
     
+    func blowedBoat(_ level: Float) {
+        if !gameEnded {
+            UIView.animate(withDuration: 2) {
+                if level == 0 {
+                    self.boat.transform = CGAffineTransform(scaleX: 1, y: 1)
+                    self.boat.frame.origin.y = 424
+                } else if level < 2 {
+                    self.boat.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+                    self.boat.frame.origin.y = 424 + 40
+                } else if level < 4 {
+                    self.boat.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+                    self.boat.frame.origin.y = 424 + 60
+                } else if level < 6 {
+                    self.boat.transform = CGAffineTransform(scaleX: 0.85, y: 0.85)
+                    self.boat.frame.origin.y = 424 + 80
+                } else {
+                    self.boat.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+                    self.boat.frame.origin.y = 424 + 100
+                }
+            }
+        }
+    }
+    
     func updateBoatLayerOpen(_ level: Float) {
+        blowedBoat(level)
         if level < 2 {
             boat.image = UIImage(named: "Boat1")
+            topWater.image = UIImage(named: "TopWaterSteady")
+            bottomWater.image = UIImage(named: "BottomWaterSteady")
         } else if level < 4 {
             boat.image = UIImage(named: "Boat2")
+            topWater.image = UIImage(named: "TopWaterSteady")
+            bottomWater.image = UIImage(named: "BottomWaterSteady")
         } else if level < 6 {
             boat.image = UIImage(named: "Boat3")
+            topWater.image = UIImage(named: "TopWater")
+            bottomWater.image = UIImage(named: "BottomWater")
         } else {
             boat.image = UIImage(named: "Boat4")
+            topWater.image = UIImage(named: "TopWater")
+            bottomWater.image = UIImage(named: "BottomWater")
         }
     }
     
     func animateBoatGoAway() {
         UIView.animate(withDuration: 4) {
             self.boat.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+            self.boat.alpha = 0
         }
         UIView.animate(withDuration: 8) {
             self.boat.frame.origin.y += 450
-            self.boat.alpha = 0
         }
     }
     
