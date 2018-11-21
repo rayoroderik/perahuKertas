@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import AVFoundation
 import CoreAudio
+import CloudKit
 
 class ViewController: UIViewController {
     
@@ -22,6 +23,9 @@ class ViewController: UIViewController {
     var boatSwingRight: Bool = true
     var level: Float = 0.0
     var movingDistance : Float = 0.0
+    
+    let container = CKContainer.default()
+    var score = CKRecord(recordType: "Highscores")
     
     let boat: UIImageView = {
         let boat: UIImage = UIImage(named: "Boat1")!
@@ -80,6 +84,11 @@ class ViewController: UIViewController {
         timerLabel.numberOfLines = 0
         timerLabel.lineBreakMode = .byWordWrapping
         return timerLabel
+    }()
+    
+    let inputNameAlertController: UIAlertController = {
+        let inputNameAlertController: UIAlertController =  UIAlertController(title: "", message: "", preferredStyle: .alert)
+        return inputNameAlertController
     }()
     
     var recorder: AVAudioRecorder!
@@ -150,6 +159,55 @@ class ViewController: UIViewController {
             stopBoatTimer()
             
             animateBoatGoAway()
+            
+            //munculin textField untuk input nama, lalu push ke publicDatabase di CloudKit dengan score-nya. kalo nama-nya uda ada, suggest nama lain.
+            showNameTextField()
+            
+            
+        }
+    }
+    
+    func showNameTextField(){
+        inputNameAlertController.title = "you spent \(String(format: "%.2f", elapsedTime)) seconds. share your achievements!"
+        
+        inputNameAlertController.addTextField { (nameTextField) in
+            nameTextField.placeholder = "enter name here"
+        }
+        
+        inputNameAlertController.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+        inputNameAlertController.addAction(UIAlertAction(title: "Submit", style: .default, handler: { (alertAction) in
+            
+            if let name = self.inputNameAlertController.textFields![0].text{
+                self.insertNew(with: name)
+            }
+        }))
+        self.present(inputNameAlertController, animated: true, completion: nil)
+    }
+    
+    func insertNew(with name: String){
+        let nameEqualTo = NSPredicate(format: "Name = %@", name)
+        
+        let query = CKQuery(recordType: "Highscores", predicate: nameEqualTo)
+        
+        container.publicCloudDatabase.perform(query, inZoneWith: CKRecordZone.default().zoneID) { (records, error) in
+            if let error = error{
+                print(error.localizedDescription)
+            }
+            if let records = records{
+                if let record = records.first{
+                    //kalo namanya uda ada
+                    
+                }
+                else{
+                    self.score["Name"] = name
+                    self.score["SecondsPassed"] = Double(String(format: "%.2f", self.elapsedTime))
+                    self.container.publicCloudDatabase.save(self.score) { (record, error) in
+                        if let error = error{
+                            print(error.localizedDescription)
+                        }
+                    }
+                }
+            }
         }
     }
     
