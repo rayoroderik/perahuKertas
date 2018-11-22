@@ -24,6 +24,11 @@ class ViewController: UIViewController {
     var level: Float = 0.0
     var movingDistance : Float = 0.0
     
+    let synth = AVSpeechSynthesizer()
+    let instruct = "Blow into the microphone to start sailing. Do your best to"
+    
+    let finishsound = "Congratulations! You've reached the finish line!"
+    
     let container = CKContainer.default()
     var score = CKRecord(recordType: "Highscores")
     var isWritingScore = false
@@ -103,7 +108,10 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let utterance = AVSpeechUtterance(string: instruct)
+        utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
         
+        synth.speak(utterance)
         if !gameIsSet {
             let documents = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0])
             let url = documents.appendingPathComponent("record.caf")
@@ -232,6 +240,10 @@ class ViewController: UIViewController {
     
     func stopTimer(){
         if scoreTimer != nil || scoreTimer != Timer() {
+            let utterance = AVSpeechUtterance(string: finishsound)
+            utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+            
+            synth.speak(utterance)
             scoreTimer?.invalidate()
             scoreTimer = nil
         }
