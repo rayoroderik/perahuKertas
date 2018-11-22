@@ -15,6 +15,7 @@
 		A37B243D219E6E1700A53797 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A37B243B219E6E1700A53797 /* Main.storyboard */; };
 		A37B243F219E6E1800A53797 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A37B243E219E6E1800A53797 /* Assets.xcassets */; };
 		A37B2442219E6E1800A53797 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A37B2440219E6E1800A53797 /* LaunchScreen.storyboard */; };
+		A692F20D21A6ED47003D6080 /* WaveSound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = A692F20C21A6ED46003D6080 /* WaveSound.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		A37B243E219E6E1800A53797 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A37B2441219E6E1800A53797 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A37B2443219E6E1800A53797 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A692F20C21A6ED46003D6080 /* WaveSound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = WaveSound.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@
 				A37B243E219E6E1800A53797 /* Assets.xcassets */,
 				A37B2440219E6E1800A53797 /* LaunchScreen.storyboard */,
 				A37B2443219E6E1800A53797 /* Info.plist */,
+				A692F20C21A6ED46003D6080 /* WaveSound.mp3 */,
 				9BF37D66219E7BEC006A8CF8 /* UIHelper.swift */,
 				9BF37D68219E7D86006A8CF8 /* UIAnimations.swift */,
 			);
@@ -153,6 +156,7 @@
 				A37B2442219E6E1800A53797 /* LaunchScreen.storyboard in Resources */,
 				A37B243F219E6E1800A53797 /* Assets.xcassets in Resources */,
 				A37B243D219E6E1700A53797 /* Main.storyboard in Resources */,
+				A692F20D21A6ED47003D6080 /* WaveSound.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -314,13 +318,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = perahuKertas/perahuKertas.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7QY3HCSBXC;
+				DEVELOPMENT_TEAM = WX7ZU47GZQ;
 				INFOPLIST_FILE = perahuKertas/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = appleacademy.perahuKertas.MC3Bridge;
+				PRODUCT_BUNDLE_IDENTIFIER = appleacademy.perahuBalap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -333,13 +337,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = perahuKertas/perahuKertas.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7QY3HCSBXC;
+				DEVELOPMENT_TEAM = WX7ZU47GZQ;
 				INFOPLIST_FILE = perahuKertas/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = appleacademy.perahuKertas.MC3Bridge;
+				PRODUCT_BUNDLE_IDENTIFIER = appleacademy.perahuBalap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
