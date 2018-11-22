@@ -186,6 +186,7 @@ extension ViewController {
                 view.removeFromSuperview()
             }
         }
+        boat.image = UIImage(named: "Boat1")
         timerLabel.text = "Blow the ship to start sailing"
         timerLabel.font = UIFont.init(name: "Helvetica", size: 24)
         boatAnimateReset()

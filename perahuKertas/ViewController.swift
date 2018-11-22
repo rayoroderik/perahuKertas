@@ -11,6 +11,7 @@ import UIKit
 import AVFoundation
 import CoreAudio
 import CloudKit
+import AudioToolbox
 
 class ViewController: UIViewController {
     
@@ -215,14 +216,20 @@ class ViewController: UIViewController {
     }
     
     func moveShip(){
+        vibrateShip()
         distance = distance + Int(level)
         print(distance)
-        
         updateBoatLayerOpen(level)
         self.movingDistance = Float(self.distance) / 5
         UIView.animate(withDuration: 0.01) {
             let shipPosition = CGPoint(x: 19, y: 724 - Int(self.movingDistance))
             self.distanceIndicator.frame.origin = shipPosition
+        }
+    }
+    
+    func vibrateShip() {
+        if level > 6 {
+            AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
         }
     }
     
