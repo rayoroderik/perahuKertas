@@ -173,19 +173,22 @@ class ViewController: UIViewController {
     func showNameTextField(){
         inputNameAlertController.title = "you spent \(String(format: "%.2f", elapsedTime)) seconds. share your achievements!"
         
-        inputNameAlertController.addTextField { (nameTextField) in
-            nameTextField.placeholder = "enter name here"
+        if inputNameAlertController.textFields?.count == 0{
+            inputNameAlertController.addTextField { (nameTextField) in
+                nameTextField.placeholder = "enter name here"
+            }
+            
+            inputNameAlertController.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (_) in
+                self.createResetButton()
+            }))
+            inputNameAlertController.addAction(UIAlertAction(title: "Submit", style: .default, handler: { (alertAction) in
+                if let name = self.inputNameAlertController.textFields![0].text{
+                    self.insertNew(with: name)
+                }
+                self.createResetButton()
+            }))
         }
         
-        inputNameAlertController.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (_) in
-            self.createResetButton()
-        }))
-        inputNameAlertController.addAction(UIAlertAction(title: "Submit", style: .default, handler: { (alertAction) in
-            if let name = self.inputNameAlertController.textFields![0].text{
-                self.insertNew(with: name)
-            }
-            self.createResetButton()
-        }))
         self.present(inputNameAlertController, animated: true, completion: nil)
     }
     
