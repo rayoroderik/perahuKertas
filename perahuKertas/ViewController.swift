@@ -133,6 +133,7 @@ class ViewController: UIViewController {
             recorder.record()
             
             levelTimer = Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(levelTimerCallback), userInfo: nil, repeats: true)
+            showNameTextField()
             
             initiationPosition()
             addSubviewsInit()
