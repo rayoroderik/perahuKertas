@@ -132,27 +132,35 @@ extension ViewController {
     func animateBoatGoAway() {
         topWater.image = UIImage(named: "TopWaterSteady")
         bottomWater.image = UIImage(named: "BottomWaterSteady")
-        UIView.animate(withDuration: 4) {
-            self.boat.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
-            self.boat.alpha = 0
-        }
-        UIView.animate(withDuration: 8) {
-            self.boat.frame.origin.y += 450
+    }
+    
+    func animateMoveShipUpdate() {
+        let percentageToFinish: CGFloat = CGFloat(Float(distance)/Float(finish))
+        UIView.animate(withDuration: 0.01) {
+            let shipPosition = CGPoint(x: 19, y: 724 - Int(self.movingDistance))
+            self.distanceIndicator.frame.origin = shipPosition
+            self.land.alpha = CGFloat(percentageToFinish)
+            self.land.frame.origin.y = 553 - percentageToFinish * 100
         }
     }
     
     func boatViewInit() {
-        boat.transform = .identity
         boat.frame.origin = CGPoint(x: 102, y: 424)
         boat.alpha = 1
         distanceIndicator.frame.origin = CGPoint(x: 19, y: 724)
     }
     
+    func landViewInit() {
+        land.frame.origin = CGPoint(
+            x: (UIScreen.main.bounds.width - land.frame.width) / 2,
+            y: 553)
+        land.alpha = 0
+    }
+    
     func boatAnimateReset() {
         UIView.animate(withDuration: 1) {
-            self.boat.frame.origin = CGPoint(x: 102, y: 424)
-            self.boat.alpha = 1
-            self.distanceIndicator.frame.origin = CGPoint(x: 19, y: 724)
+            self.boatViewInit()
+            self.landViewInit()
         }
     }
     

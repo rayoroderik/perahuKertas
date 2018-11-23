@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		653B03F521A5057500716498 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 653B03F421A5057500716498 /* CloudKit.framework */; };
+		9BBC1BF421A6D17900C50BE3 /* AVHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BBC1BF321A6D17900C50BE3 /* AVHelper.swift */; };
 		9BF37D67219E7BEC006A8CF8 /* UIHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF37D66219E7BEC006A8CF8 /* UIHelper.swift */; };
 		9BF37D69219E7D86006A8CF8 /* UIAnimations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF37D68219E7D86006A8CF8 /* UIAnimations.swift */; };
 		A37B2438219E6E1700A53797 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37B2437219E6E1700A53797 /* AppDelegate.swift */; };
@@ -20,6 +21,7 @@
 /* Begin PBXFileReference section */
 		653B03F221A5054C00716498 /* perahuKertas.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = perahuKertas.entitlements; sourceTree = "<group>"; };
 		653B03F421A5057500716498 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		9BBC1BF321A6D17900C50BE3 /* AVHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVHelper.swift; sourceTree = "<group>"; };
 		9BF37D66219E7BEC006A8CF8 /* UIHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIHelper.swift; sourceTree = "<group>"; };
 		9BF37D68219E7D86006A8CF8 /* UIAnimations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIAnimations.swift; sourceTree = "<group>"; };
 		A37B2434219E6E1700A53797 /* perahuKertas.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = perahuKertas.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -78,6 +80,7 @@
 				A37B243E219E6E1800A53797 /* Assets.xcassets */,
 				A37B2440219E6E1800A53797 /* LaunchScreen.storyboard */,
 				A37B2443219E6E1800A53797 /* Info.plist */,
+				9BBC1BF321A6D17900C50BE3 /* AVHelper.swift */,
 				9BF37D66219E7BEC006A8CF8 /* UIHelper.swift */,
 				9BF37D68219E7D86006A8CF8 /* UIAnimations.swift */,
 			);
@@ -167,6 +170,7 @@
 				A37B2438219E6E1700A53797 /* AppDelegate.swift in Sources */,
 				9BF37D69219E7D86006A8CF8 /* UIAnimations.swift in Sources */,
 				9BF37D67219E7BEC006A8CF8 /* UIHelper.swift in Sources */,
+				9BBC1BF421A6D17900C50BE3 /* AVHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -79,6 +79,15 @@ class ViewController: UIViewController {
         return distanceIndicatorView
     }()
     
+    let land: UIImageView = {
+        let landImage: UIImage = UIImage(named: "Land")!
+        let size: CGSize = CGSize(width: landImage.size.width, height: landImage.size.height)
+        let landView: UIImageView = UIImageView(frame: CGRect(origin: .zero, size: size))
+        landView.image = landImage
+        landView.contentMode = .scaleAspectFill
+        return landView
+    }()
+    
     let timerLabel: UILabel = {
         let timerLabel: UILabel = UILabel()
         timerLabel.frame = CGRect(x: 10, y: 50, width: 230, height: 60)
@@ -109,44 +118,24 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let utterance = AVSpeechUtterance(string: instruct)
-        utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
-        
-        synth.speak(utterance)
-        if !gameIsSet {
-            let documents = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0])
-            let url = documents.appendingPathComponent("record.caf")
+        if !gameIsSet { // First setup ingame avoiding minimize app re-setup
+            // Instruction speaking
+            speakUtterance(instruct)
             
-            let recordSettings: [String: Any] = [
-                AVFormatIDKey:              kAudioFormatAppleIMA4,
-                AVSampleRateKey:            44100.0,
-                AVNumberOfChannelsKey:      2,
-                AVEncoderBitRateKey:        12800,
-                AVLinearPCMBitDepthKey:     16,
-                AVEncoderAudioQualityKey:   AVAudioQuality.max.rawValue
-            ]
+            // Record blow
+            recordBlow()
             
-            let audioSession = AVAudioSession.sharedInstance()
-            do {
-                try audioSession.setCategory(.playAndRecord, mode: .measurement, options: .defaultToSpeaker)
-                try audioSession.setActive(true)
-                try recorder = AVAudioRecorder(url:url, settings: recordSettings)
-                
-            } catch {
-                return
-            }
-            
-            recorder.prepareToRecord()
-            recorder.isMeteringEnabled = true
-            recorder.record()
-            
+            // Set levelTimer
             levelTimer = Timer.scheduledTimer(timeInterval: 0.02, target: self, selector: #selector(levelTimerCallback), userInfo: nil, repeats: true)
             showNameTextField()
             
+            // Setup animations
             initiationPosition()
             addSubviewsInit()
             startWaterMoveTimer()
             startBoatTimer()
+            
+            // Make game setup indicator true
             gameIsSet = true
         }
     }
@@ -171,6 +160,10 @@ class ViewController: UIViewController {
                 stopTimer()
                 stopBoatTimer()
                 animateBoatGoAway()
+                
+                // Finish speaking
+                speakUtterance(finishsound)
+                
                 //munculin textField untuk input nama, lalu push ke publicDatabase di CloudKit dengan score-nya. kalo nama-nya uda ada, suggest nama lain.
                 showNameTextField()
                 print("time: \(elapsedTime)")
@@ -230,13 +223,10 @@ class ViewController: UIViewController {
     func moveShip(){
         vibrateShip()
         distance = distance + Int(level)
-        print(distance)
+        print(distance) // Print distance
         updateBoatLayerOpen(level)
-        self.movingDistance = Float(self.distance) / 5
-        UIView.animate(withDuration: 0.01) {
-            let shipPosition = CGPoint(x: 19, y: 724 - Int(self.movingDistance))
-            self.distanceIndicator.frame.origin = shipPosition
-        }
+        movingDistance = Float(distance) / 5
+        animateMoveShipUpdate()
     }
     
     func vibrateShip() {
@@ -251,10 +241,6 @@ class ViewController: UIViewController {
     
     func stopTimer(){
         if scoreTimer != nil || scoreTimer != Timer() {
-            let utterance = AVSpeechUtterance(string: finishsound)
-            utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
-            
-            synth.speak(utterance)
             scoreTimer?.invalidate()
             scoreTimer = nil
         }
@@ -273,6 +259,7 @@ class ViewController: UIViewController {
     }
     
     func addSubviewsInit() {
+        viewContainer.addSubview(land)
         viewContainer.addSubview(boat)
         viewContainer.addSubview(topWater)
         viewContainer.addSubview(bottomWater)
@@ -287,11 +274,18 @@ class ViewController: UIViewController {
         imageDesireSize(view: bottomWater, desiredWidth: 500)
         topWater.image = UIImage(named: "TopWaterSteady")
         bottomWater.image = UIImage(named: "BottomWaterSteady")
-        topWater.frame.origin = CGPoint(x: (UIScreen.main.bounds.width - topWater.frame.width) / 2, y: 734)
-        bottomWater.frame.origin = CGPoint(x: (UIScreen.main.bounds.width - bottomWater.frame.width) / 2, y: 770)
+        topWater.frame.origin = CGPoint(
+            x: (UIScreen.main.bounds.width - topWater.frame.width) / 2,
+            y: 734)
+        bottomWater.frame.origin = CGPoint(
+            x: (UIScreen.main.bounds.width - bottomWater.frame.width) / 2,
+            y: 770)
         
         // Boat
         boatViewInit()
+        
+        // Land
+        landViewInit()
         
         // Indicators
         lengthBar.frame.origin = CGPoint(x: 19, y: 51)
