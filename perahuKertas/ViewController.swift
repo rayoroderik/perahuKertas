@@ -155,9 +155,7 @@ class ViewController: UIViewController {
                 startTimer()
                 moveShip()
             } else if isLoud && distance >= finish/2 && havePassedHalfway == false {
-                let utterance = AVSpeechUtterance(string: halfway)
-                utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
-                synth.speak(utterance)
+                speakUtterance(halfway)
                 havePassedHalfway = true
                 moveShip()
             } else if isLoud && distance < finish{
