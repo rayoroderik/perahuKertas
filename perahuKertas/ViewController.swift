@@ -26,13 +26,14 @@ class ViewController: UIViewController {
     var movingDistance : Float = 0.0
     
     let synth = AVSpeechSynthesizer()
-    let instruct = "Blow into the microphone to start sailing. Do your best to reach the finish in the shortest time!"
+    let instruct = "Blow into the microphone to start sailing. Do your best to reach the island in the shortest time!"
     let halfway = "Hey, you are halfway there!"
     let finishsound = "Congratulations! You've reached the finish line!"
     
     let container = CKContainer.default()
     var score = CKRecord(recordType: "Highscores")
     var isWritingScore = false
+    var wr = 1.33
     
     var player: AVAudioPlayer?
     
@@ -179,7 +180,32 @@ class ViewController: UIViewController {
     }
     
     func showNameTextField(){
-        inputNameAlertController.title = "You spent \(String(format: "%.2f", elapsedTime)) seconds. Share your achievements!"
+        let predicate = NSPredicate(value: true)
+        let query = CKQuery(recordType: "Highscores", predicate: predicate)
+        query.sortDescriptors = [NSSortDescriptor(key: "SecondsPassed", ascending: true)]
+        container.publicCloudDatabase.perform(query, inZoneWith: CKRecordZone.default().zoneID) { (records, error) in
+            if let error = error{
+                print(error.localizedDescription)
+            }
+            if let records = records{
+                if let record = records.first{
+                    //kalo namanya uda ada
+                    self.wr = self.score["SecondsPassed"]!
+                    print("halo \(self.wr)")
+                }
+                else{
+//
+//                    self.score["SecondsPassed"] = Double(String(format: "%.2f", self.elapsedTime))
+//                    self.container.publicCloudDatabase.save(self.score) { (record, error) in
+//                        if let error = error{
+//                            print(error.localizedDescription)
+//                        }
+//                    }
+                }
+            }
+        }
+        
+        inputNameAlertController.title = "You spent \(String(format: "%.2f", elapsedTime)) seconds. The World Record is \(String(format: "%.2f", wr)) seconds."
         
         if inputNameAlertController.textFields?.count == 0{
             inputNameAlertController.addTextField { (nameTextField) in
@@ -202,8 +228,9 @@ class ViewController: UIViewController {
     
     func insertNew(with name: String){
         let nameEqualTo = NSPredicate(format: "Name = %@", name)
-        
-        let query = CKQuery(recordType: "Highscores", predicate: nameEqualTo)
+        let predicate = NSPredicate(value: true)
+        let query = CKQuery(recordType: "Highscores", predicate: predicate)
+//        query.sortDescriptors = [NSSortDescriptor(key: "SecondsPassed", ascending: true)]
         
         container.publicCloudDatabase.perform(query, inZoneWith: CKRecordZone.default().zoneID) { (records, error) in
             if let error = error{
