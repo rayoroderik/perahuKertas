@@ -202,6 +202,7 @@ extension ViewController {
         distance = 0
         gameEnded = false
         isWritingScore = false
+        havePassedHalfway = false
         levelTimerCallback()
         startBoatTimer()
     }

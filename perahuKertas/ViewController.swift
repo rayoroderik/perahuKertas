@@ -26,13 +26,15 @@ class ViewController: UIViewController {
     var movingDistance : Float = 0.0
     
     let synth = AVSpeechSynthesizer()
-    let instruct = "Blow into the microphone to start sailing. Do your best to"
-    
+    let instruct = "Blow into the microphone to start sailing. Do your best to reach the finish in the shortest time!"
+    let halfway = "Hey, you are halfway there!"
     let finishsound = "Congratulations! You've reached the finish line!"
     
     let container = CKContainer.default()
     var score = CKRecord(recordType: "Highscores")
     var isWritingScore = false
+    
+    var player: AVAudioPlayer?
     
     let boat: UIImageView = {
         let boat: UIImage = UIImage(named: "Boat1")!
@@ -113,6 +115,7 @@ class ViewController: UIViewController {
     var elapsedTime = 0.01
     var gameEnded = false
     var gameIsSet = false
+    var havePassedHalfway = false
     
     let LEVEL_THRESHOLD: Float = 0.0
     
@@ -151,6 +154,12 @@ class ViewController: UIViewController {
             if isLoud && distance == 0 {
                 startTimer()
                 moveShip()
+            } else if isLoud && distance >= finish/2 && havePassedHalfway == false {
+                let utterance = AVSpeechUtterance(string: halfway)
+                utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+                synth.speak(utterance)
+                havePassedHalfway = true
+                moveShip()
             } else if isLoud && distance < finish{
                 moveShip()
             }
@@ -172,11 +181,11 @@ class ViewController: UIViewController {
     }
     
     func showNameTextField(){
-        inputNameAlertController.title = "you spent \(String(format: "%.2f", elapsedTime)) seconds. share your achievements!"
+        inputNameAlertController.title = "You spent \(String(format: "%.2f", elapsedTime)) seconds. Share your achievements!"
         
         if inputNameAlertController.textFields?.count == 0{
             inputNameAlertController.addTextField { (nameTextField) in
-                nameTextField.placeholder = "enter name here"
+                nameTextField.placeholder = "Enter name here"
             }
             
             inputNameAlertController.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { (_) in
@@ -251,6 +260,21 @@ class ViewController: UIViewController {
         let currentTime = String(format: "%.2f", elapsedTime)
         timerLabel.font = UIFont.init(name: "Helvetica", size: 60)
         timerLabel.text = "\(currentTime) s"
+    }
+    
+    func playSound() {
+        guard let url = Bundle.main.url(forResource: "WaveSound", withExtension: "mp3") else {
+            print("url not found")
+            return
+        }
+        
+        do {
+            player = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
+
+            player!.play()
+        } catch let error as NSError {
+            print("error: \(error.localizedDescription)")
+        }
     }
     
     override func didReceiveMemoryWarning() {
