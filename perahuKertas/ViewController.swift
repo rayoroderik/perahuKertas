@@ -155,6 +155,10 @@ class ViewController: UIViewController {
             if isLoud && distance == 0 {
                 startTimer()
                 moveShip()
+                playWaveSound()
+//                DispatchQueue.main.async {
+//                    self.playWaveSound()
+//                }
             } else if isLoud && distance >= finish/2 && havePassedHalfway == false {
                 speakUtterance(halfway)
                 havePassedHalfway = true
@@ -266,7 +270,9 @@ class ViewController: UIViewController {
     func vibrateShip() {
         if level > 6 {
             AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+            playWindSound()
         }
+        
     }
     
     func startTimer(){
@@ -287,24 +293,43 @@ class ViewController: UIViewController {
         timerLabel.text = "\(currentTime) s"
     }
     
-    func playSound() {
-        guard let url = Bundle.main.url(forResource: "WaveSound", withExtension: "mp3") else {
-            print("url not found")
-            return
-        }
+    func playWaveSound() {
+//        guard let url = Bundle.main.url(forResource: "WaveSound", withExtension: "mp3") else {
+//            print("url not found")
+//            return
+//        }
+//
+//        do {
+//            player = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
+//
+//            player!.play()
+//            player?.numberOfLoops = -1
+//        } catch let error as NSError {
+//            print("error: \(error.localizedDescription)")
+//        }
         
-        do {
-            player = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
-
-            player!.play()
-        } catch let error as NSError {
-            print("error: \(error.localizedDescription)")
-        }
+        GSAudio.sharedInstance.playSound(soundFileName: "WaveSound")
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    func playWindSound() {
+//        guard let url = Bundle.main.url(forResource: "wind", withExtension: "m4a") else {
+//            print("url not found")
+//            return
+//        }
+//
+//        do {
+//            player = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.m4a.rawValue)
+//
+//            player!.play()
+//        } catch let error as NSError {
+//            print("error: \(error.localizedDescription)")
+//        }
+//    }
+//
+//    override func didReceiveMemoryWarning() {
+//        super.didReceiveMemoryWarning()
+//        // Dispose of any resources that can be recreated.
+        GSAudio.sharedInstance.playSound(soundFileName: "WindSound")
     }
     
     func addSubviewsInit() {
